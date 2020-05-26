@@ -10,8 +10,12 @@
                 <input type="email" id="email" class="form-control" />
             </div>
             <div>
-                <button class="btn btn-primary">Sign up</button>&nbsp;
-                <button class="btn btn-primary">Switch to Login</button>
+                <button class="btn btn-primary" type="submit">
+                    {{ isLoginMode ? 'Login' : 'Sign Up'}}
+                </button>&nbsp;  
+                <button class="btn btn-primary" (click)="onSwitchMode()" type="Button">
+                    Switch to {{ isLoginMode ? 'Sign up' : 'Login' }}
+                </button>
             </div>
         
         </form>
