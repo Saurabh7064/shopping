@@ -3,9 +3,9 @@ import { Subscription, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { Ingredient } from '../shared/ingredient.model';
-import { ShoppingListService } from './shopping-list-service';
+import * as ShoppingListActions from './store/shopping-list.actions';
+import * as fromApp from '../store/app.reducer';
 import { LoggingService } from '../logging.service.module';
-
 
 @Component({
   selector: 'app-shopping-list',
@@ -13,29 +13,32 @@ import { LoggingService } from '../logging.service.module';
   styleUrls: ['./shopping-list.component.css']
 })
 export class ShoppingListComponent implements OnInit, OnDestroy {
-  ingredients: Observable<{ ingredients: Ingredient[] }> ;
+  ingredients: Observable<{ ingredients: Ingredient[] }>;
   private subscription: Subscription;
 
-  constructor(private slsService: ShoppingListService,
-              private loggingService: LoggingService,
-              private store: Store<{ shoppingList: { ingredients: Ingredient[] } }>){}
-  ngOnInit(): void {
+  constructor(
+    private loggingService: LoggingService,
+    private store: Store<fromApp.AppState>
+  ) {}
+
+  ngOnInit() {
     this.ingredients = this.store.select('shoppingList');
-    // this.ingredients = this.slsService.getIngredients();
-    // this.subscription = this.slsService.ingredientsChanged
-    // .subscribe(
-    //   (ingredients: Ingredient[])=>{
+    // this.ingredients = this.slService.getIngredients();
+    // this.subscription = this.slService.ingredientsChanged.subscribe(
+    //   (ingredients: Ingredient[]) => {
     //     this.ingredients = ingredients;
     //   }
     // );
-    this.loggingService.printLog("Hello from ShoppingListComponent ngOninit");
+
+    this.loggingService.printLog('Hello from ShoppingListComponent ngOnInit!');
   }
 
   onEditItem(index: number) {
-    this.slsService.startEditing.next(index);
+    // this.slService.startedEditing.next(index);
+    this.store.dispatch(new ShoppingListActions.StartEdit(index));
   }
 
-  ngOnDestroy(): void {
-    //this.subscription.unsubscribe();
+  ngOnDestroy() {
+    // this.subscription.unsubscribe();
   }
 }
